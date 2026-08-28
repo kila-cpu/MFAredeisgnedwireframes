@@ -1,0 +1,14 @@
+{
+  "name": "mfa-redesigned-wireframes",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Wireframe pack for MFA Consulting Engineers - office backend app, engineer mobile app and contractor portal",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "UNLICENSED"
+}
