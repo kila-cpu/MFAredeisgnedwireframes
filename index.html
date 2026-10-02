@@ -333,6 +333,13 @@ td.r,th.r{text-align:right}
 .preply input:focus{outline:none; border-color:#00CABE}
 .chip.pchip{background:rgba(255,255,255,.08); color:#CFE0DD; border-color:rgba(255,255,255,.14)}
 
+.mmap{border:1px solid var(--line); border-radius:6px; overflow:hidden}
+.pphotos{display:grid; grid-template-columns:repeat(4,1fr); gap:6px; margin-top:11px}
+.pphoto{aspect-ratio:4/3; border-radius:5px; border:1px solid rgba(255,255,255,.14); overflow:hidden;
+  background:repeating-linear-gradient(135deg,#16302B 0 7px,#1D3B35 7px 14px); display:flex; align-items:flex-end; padding:4px}
+.pphoto span{font-family:var(--mono); font-size:8px; color:#8FA8A4}
+.pphoto.map{background:#EFEDE7; padding:0; display:block}
+.pphoto-cap{font-size:10.5px; color:#8FA8A4; margin-top:6px}
 /* ---------------- mobile capture ---------------- */
 .phone{width:322px; margin:0 auto; border:9px solid #0B1F1C; border-radius:34px; overflow:hidden; background:var(--surface); box-shadow:var(--shadow-lift); position:relative}
 .phone-notch{height:22px; background:#0B1F1C; display:grid; place-items:center}
@@ -379,7 +386,13 @@ td.r,th.r{text-align:right}
 
 /* ---------------- task calendar ---------------- */
 .cal-wrap{overflow-x:auto}
-.cal{display:grid; grid-template-columns:196px repeat(5, minmax(150px,1fr)); min-width:900px}
+.cal{display:grid; min-width:900px}
+.cal.dense{min-width:1180px}
+.cal.dense .cal-cell, .cal.dense .cal-emp{height:70px}
+.cal.dense .cal-emp .eyebrow{display:none}
+.cal.dense .cal-emp > .row > span:last-child > span:first-child{font-size:11.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.cal.dense .cal-emp{padding:7px 9px}
+.cal-h.wkstart, .cal-cell.wkstart{border-left:2px solid var(--line-2)}
 .cal-h{padding:9px 11px; background:var(--surface-2); border-bottom:1px solid var(--line);
   border-left:1px solid var(--line); display:flex; flex-direction:column; gap:1px}
 .cal-h span{font-family:var(--mono); font-size:9.5px; text-transform:uppercase; letter-spacing:.1em; color:var(--ink-3)}
@@ -388,19 +401,20 @@ td.r,th.r{text-align:right}
 .cal-h.today b{color:var(--accent-ink)}
 .cal-h .tdot{color:var(--accent-ink); font-weight:600}
 .cal-emp-h{border-left:0}
-.cal-emp{padding:10px 11px; border-bottom:1px solid var(--line); background:var(--surface-2);
+.cal-emp{padding:8px 10px; height:92px; overflow:hidden; border-bottom:1px solid var(--line); background:var(--surface-2);
   display:flex; flex-direction:column; gap:8px; justify-content:space-between}
 .cal-emp .load{display:flex; align-items:center; gap:7px}
 .cal-emp .load .meter{flex:1}
 .cal-emp .load .num{font-size:10.5px; color:var(--ink-3)}
 .cal-emp .load .num.over{color:var(--attn); font-weight:600}
-.cal-cell{border-left:1px solid var(--line); border-bottom:1px solid var(--line); padding:7px;
-  display:flex; flex-direction:column; gap:5px; min-height:98px; position:relative}
+.cal-cell{border-left:1px solid var(--line); border-bottom:1px solid var(--line); padding:5px;
+  flex-direction:row !important; align-items:stretch; height:92px; overflow:hidden;
+  display:flex; gap:3px; position:relative}
 .cal-cell.today{background:color-mix(in srgb, var(--brand-tint) 45%, transparent)}
 .cal-cell.hot{box-shadow:inset 0 2px 0 var(--attn)}
 .cellh{position:absolute; top:5px; right:6px; font-family:var(--mono); font-size:9.5px; color:var(--ink-3)}
 .cellh.over{color:var(--attn); font-weight:600}
-.ctask{display:flex; flex-direction:column; gap:2px; text-align:left; width:100%;
+.ctask{display:flex; flex-direction:column; gap:2px; text-align:left; flex:1 1 0; min-width:0; overflow:hidden;
   background:var(--surface); border:1px solid var(--line); border-left:3px solid var(--accent);
   border-radius:5px; padding:5px 6px; transition:box-shadow .12s, transform .12s}
 .ctask:hover{box-shadow:var(--shadow); transform:translateY(-1px)}
@@ -411,11 +425,19 @@ td.r,th.r{text-align:right}
   overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
 .ch{margin-left:auto; font-family:var(--mono); font-size:9.5px; font-weight:600; color:var(--ink-2); flex:none}
 .ch.full{color:var(--resolved)}
+.cal.dense .ct, .cal.dense .cbot{display:none}
+.cal.dense .ctask{padding:4px; border-left-width:3px; background:color-mix(in srgb, var(--pc) 13%, var(--surface))}
+.cal.dense .ctop{flex-direction:column; gap:0; align-items:flex-start}
+.cal.dense .cref{font-size:8px; max-width:100%}
+.cal.dense .ch{margin-left:0; font-size:9px}
+.cal.dense .cell-add{display:none}
+.cal.dense .cal-emp .load .num{display:none}
+.cal-cell:has(.ctask + .ctask) .ct{-webkit-line-clamp:3}
 .ct{font-size:11px; line-height:1.3; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden}
 .cbot{display:flex; align-items:center; gap:4px; font-family:var(--mono); font-size:8.5px; color:var(--ink-3)}
 .cbot svg{width:9px; height:9px}
 .clog{margin-left:auto; color:var(--resolved)}
-.cell-add{margin-top:auto; align-self:flex-start; width:20px; height:20px; border-radius:4px;
+.cell-add{align-self:flex-end; margin-left:auto; flex:none; width:20px; height:20px; border-radius:4px;
   display:grid; place-items:center; color:var(--ink-3); opacity:0; transition:opacity .12s}
 .cal-cell:hover .cell-add{opacity:1}
 .cell-add:hover{background:var(--surface-3); color:var(--ink)}
@@ -906,10 +928,14 @@ const PROJECTS = [
       {n:"Bianca Fachin", r:"Project drawing", co:"MFA Consulting Engineers", e:"bfachin@mfagroup.ie", p:"+353 96 56095"}
     ],
     drawings:[
-      {no:"0464P-C-201", t:"Drainage layout", rev:"D", date:"18.02.2026", pins:45},
-      {no:"0464P-C-100", t:"Site layout", rev:"F", date:"04.02.2026", pins:0},
-      {no:"0464P-S-042", t:"Ground floor slab layout", rev:"C", date:"11.03.2026", pins:0},
-      {no:"0464P-S-118", t:"Roof plan & truss layout", rev:"B", date:"22.05.2026", pins:0}
+      {no:"0464P-C-100", t:"Site layout", rev:"F", date:"04.02.2026", pins:0, floor:"Site wide", area:"External works"},
+      {no:"0464P-C-201", t:"Drainage layout", rev:"D", date:"18.02.2026", pins:45, floor:"Site wide", area:"External works"},
+      {no:"0464P-S-042", t:"Ground floor slab layout", rev:"C", date:"11.03.2026", pins:0, floor:"Ground floor", area:"Block A"},
+      {no:"0464P-S-061", t:"Ground floor services layout", rev:"A", date:"14.03.2026", pins:0, floor:"Ground floor", area:"Block A"},
+      {no:"0464P-S-074", t:"First floor structure", rev:"B", date:"02.04.2026", pins:0, floor:"First floor", area:"Block A"},
+      {no:"0464P-S-081", t:"First floor layout", rev:"A", date:"02.04.2026", pins:0, floor:"First floor", area:"Block B"},
+      {no:"0464P-S-118", t:"Roof plan & truss layout", rev:"B", date:"22.05.2026", pins:0, floor:"Roof", area:"Block A"},
+      {no:"0464P-S-119", t:"Roof plan & truss layout", rev:"B", date:"22.05.2026", pins:0, floor:"Roof", area:"Block B"}
     ],
     inspections:[
       {no:"001", type:"BCAR", elements:13, date:"25.02.2026", time:"12:10", by:"Mark Forbes",
@@ -1003,7 +1029,29 @@ const PROJECTS = [
   }
 ];
 PROJECTS.forEach(p => { p.statusBy = "Andrea de Brito"; p.statusOn = "12.08.2026"; });
+const CHECKLIST_ITEMS = [
+  "AF1 forms completed and saved in project folder",
+  "PSDP letter issued and signed",
+  "PSCS letter issued and signed",
+  "Site-Specific Method Statement / Risk Assessment received from Builder (to be requested at project commencement)",
+  "Commencement Notice submitted",
+  "Planning Conditions reviewed and addressed prior to construction",
+  "Safety File received from Builder (to be requested upon project completion)"
+];
+/* each project carries its own copy: [required, completed] per item */
+PROJECTS.forEach(p => { p.checklist = CHECKLIST_ITEMS.map(() => [false, false]); });
+
+/* who may see commercial figures on a project */
+const FINANCE_ACCESS = {
+  "Mark Forbes":true, "Edgar Henihan":true, "Brian Murphy":true,
+  "Aoife Nolan":false, "Darren Gilsenan":false, "Bianca Fachin":false,
+  "Lalit Rana":false, "Ciar\u00E1n Walsh":false
+};
+const canSeeFinance = () => state.financePreview ? false : true;
+
 const byId = id => PROJECTS.find(p => p.id === id);
+byId("0464P").checklist = [[true,true],[true,true],[true,true],[true,false],[true,true],[true,false],[false,false]];
+byId("0398P").checklist = [[true,true],[true,false],[true,false],[true,false],[true,true],[false,false],[false,false]];
 const PEOPLE = ["Mark Forbes","Edgar Henihan","Brian Murphy","Aoife Nolan","Darren Gilsenan","Bianca Fachin","Lalit Rana","Ciar\u00E1n Walsh"];
 const initials = n => n.split(" ").map(w => w[0]).join("").slice(0,2).toUpperCase();
 const eur = n => "\u20AC" + n.toLocaleString("en-IE");
@@ -1016,6 +1064,13 @@ function statusControl(p){
         + PROJECT_STATUS[k].t + '</option>').join("")
     + '</select>' + svg(I.chev) + '</span>';
 }
+/* a live project must have a site visit booked for the month ahead */
+const NEXT_MONTH = "09.2026";
+const visitBooked = p => p.inspections.some(i => i.status === "scheduled"
+  && (i.date.slice(3) === NEXT_MONTH || dnum(i.date) >= TODAYN));
+const needsVisit = p => p.status !== "complete" && p.status !== "archived" && !visitBooked(p);
+const visitFlag = p => needsVisit(p)
+  ? '<span class="chip attn" title="No site visit scheduled for the month ahead">'+svg(I.alert,2)+'No visit booked</span>' : '';
 const insp = (p,no) => p.inspections.find(i => i.no === no);
 const allInsp = () => PROJECTS.flatMap(p => p.inspections.map(i => ({...i, p:p})));
 const issueCount = i => i.findings.length ? i.findings.filter(f => f.st === "attn" || f.st === "ready").length : i.issues;
@@ -1026,6 +1081,7 @@ const state = {
   selFinding:0, planOpen:{0:true,1:true,2:true,3:true,4:true,5:true},
   shell:"home", mscreen:"day", mobAll:false, mobPid:"0464P", mobIno:"002",
   mobType:"BCAR", mobPin:null, mobCam:"rear", mobTog:{printed:true, issues:true}, mobLogged:6,
+  calWeeks:1, financePreview:false,
   mobStatus:"attn", filter:"all", issueFilter:"open", week:0, calSort:"name", calFilter:"all"
 };
 
@@ -1045,6 +1101,7 @@ const PNAV = [
     {k:"inspections", t:"Inspections", i:I.clip},
     {k:"plan", t:"Inspection Plan", i:I.list},
     {k:"issues", t:"Issue Tracker", i:I.alert},
+    {k:"checklist", t:"Checklist", i:I.check},
     {k:"benchmarks", t:"Benchmarks", i:I.chart, later:true},
     {k:"rfi", t:"RFI / RFC", i:I.file, later:true},
     {k:"uploads", t:"Uploaded Docs", i:I.file, later:true},
@@ -1056,8 +1113,8 @@ const PNAV = [
   ["Client interaction", [
     {k:"drawings", t:"Drawings & pins", i:I.pin},
     {k:"contacts", t:"Contacts", i:I.users},
-    {k:"invoices", t:"Invoices", i:I.euro},
-    {k:"payments", t:"Payment Schedule", i:I.chart},
+    {k:"invoices", t:"Invoices", i:I.euro, fin:true},
+    {k:"payments", t:"Payment Schedule", i:I.chart, fin:true},
     {k:"spaces", t:"Spaces", i:I.layers, later:true},
     {k:"meetings", t:"Meetings", i:I.clock, later:true},
     {k:"polls", t:"Meeting Polls", i:I.list, later:true},
@@ -1093,6 +1150,11 @@ function renderNav(){
           if(it.k === "inspections"){ const n = p.inspections.length; tally = n ? '<span class="tally">'+n+'</span>' : ""; }
           if(it.k === "plan" && p.inspections.some(i => i.type === "BCAR")) tally = '<span class="tally">13</span>';
           if(it.k === "drawings" && p.drawings.length) tally = '<span class="tally">'+p.drawings.length+'</span>';
+          if(it.fin && !canSeeFinance()) return '';
+          if(it.k === "checklist"){
+            const done = p.checklist.filter(c => c[1]).length;
+            tally = '<span class="tally'+(done < p.checklist.length ? "" : "")+'">'+done+'/'+p.checklist.length+'</span>';
+          }
           return '<button class="nav-item'+(it.later?" later":"")+'" data-sec="'+it.k+'" aria-current="'+(state.sec===it.k)+'">'
             + svg(it.i) + '<span>'+it.t+'</span>' + tally
             + (it.later ? '<span class="tally">later</span>' : '') + '</button>';
@@ -1141,7 +1203,7 @@ function viewDashboard(){
     + kpiTile("Inspections logged", ins.length, ins.filter(i=>i.type==="BCAR").length + " BCAR / " + ins.filter(i=>i.type!=="BCAR").length + " non-BCAR", "")
     + kpiTile("Open issues", openIssues, "across all reports", "attn")
     + kpiTile("Reports in draft", drafts.length, "not yet issued to contractor", "wip")
-    + kpiTile("Visits scheduled", sched.length, "next 14 days", "")
+    + kpiTile("No visit booked", PROJECTS.filter(needsVisit).length, "site visit not scheduled", PROJECTS.filter(needsVisit).length ? "attn" : "")
     + '</div>'
     + '<div class="grid" style="grid-template-columns:minmax(0,1.5fr) minmax(0,1fr)">'
     + '<section class="card"><div class="card-h">'+svg(I.clip,1.8)+'<h3>Inspection activity</h3>'
@@ -1158,6 +1220,17 @@ function viewDashboard(){
         + '<td class="r" style="color:var(--ink-3)">'+svg(I.arrow,1.6)+'</td></tr>').join("")
       + '</tbody></table></div></section>'
     + '<div class="stack">'
+    + (PROJECTS.filter(needsVisit).length ? '<section class="card"><div class="card-h">'+svg(I.alert,1.8)
+      + '<h3>Site visits to schedule</h3><div class="r"><span class="chip attn">'+PROJECTS.filter(needsVisit).length+'</span></div></div>'
+      + '<div class="card-b flush">'
+      + PROJECTS.filter(needsVisit).map(x => '<div class="attn" data-open="'+x.id+'" data-sec="overview">'
+        + '<div class="sv red"></div><div class="bd"><h4>'+x.name+'</h4>'
+        + '<div class="sub"><span class="mono" style="font-size:11px">'+x.ref+'</span>'
+        + '<span style="color:var(--line-2)">&middot;</span><span>nothing booked for September</span>'
+        + '<span style="color:var(--line-2)">&middot;</span><span>'+x.inspector+'</span></div></div>'
+        + '<span class="chip attn">schedule</span></div>').join("")
+      + '<div style="padding:11px 15px"><span class="hint">Checked automatically against every active project each month.</span></div>'
+      + '</div></section>' : '')
     + '<section class="card"><div class="card-h">'+svg(I.alert,1.8)+'<h3>Issues awaiting contractor</h3></div>'
       + '<div class="card-b flush">' + F001.filter(f => f.st === "attn" && f.c).slice(0,5).map(f =>
           '<div class="row" style="padding:11px 15px; border-bottom:1px solid var(--line); align-items:flex-start; gap:11px">'
@@ -1188,7 +1261,7 @@ function viewProjects(){
     + '<button class="btn primary" data-act="newproject">'+svg(I.plus)+'New project</button></div></div>'
     + '<section class="card"><div class="card-b flush tbl-wrap"><table><thead><tr>'
     + '<th>Project no.</th><th>Project name</th><th>Client</th><th>Division</th><th>Project leader</th>'
-    + '<th>Stage</th><th>Status</th><th>Inspections</th><th>Open issues</th><th></th></tr></thead><tbody>'
+    + '<th>Stage</th><th>Status</th><th>Inspections</th><th>Next visit</th><th>Open issues</th><th></th></tr></thead><tbody>'
     + PROJECTS.map(p => {
         const oi = p.inspections.reduce((n,i) => n + issueCount(i), 0);
         return '<tr class="click" data-open="'+p.id+'">'
@@ -1198,6 +1271,8 @@ function viewProjects(){
         + '<td><span class="chip grey">'+STAGES[p.stage].no+'</span></td>'
         + '<td data-nodrill>'+statusControl(p)+'</td>'
         + '<td class="num">'+p.inspections.length+'</td>'
+        + '<td>'+(needsVisit(p) ? visitFlag(p)
+            : '<span class="chip resolved">'+(p.inspections.filter(i=>i.status==="scheduled")[0]||{date:"booked"}).date+'</span>')+'</td>'
         + '<td>'+(oi ? '<span class="chip attn">'+oi+'</span>' : '<span class="chip resolved">0</span>')+'</td>'
         + '<td class="r" style="color:var(--ink-3)">'+svg(I.arrow,1.6)+'</td></tr>'; }).join("")
     + '</tbody></table></div></section>';
@@ -1211,10 +1286,12 @@ function viewProject(){
     + '<div><h1>'+p.name+'</h1><div class="ref">'+p.ref+' &middot; '+p.desc+'</div></div>'
     + '<div class="pills">'+statusControl(p)+'<span class="chip onsite"><i class="dot"></i>'+STAGES[p.stage].no+' &middot; '+STAGES[p.stage].nm+'</span>'
     + (oi ? '<span class="chip attn">'+oi+' open issues</span>' : '<span class="chip resolved">No open issues</span>')
+    + visitFlag(p)
     + '</div></div>'
     + '<div class="phead-facts">'
     + [["Client", p.client],["Division", p.division],["Project leader", p.leader],["Assigned certifier", p.inspector],
-       ["Project drawing", p.drawing],["Sector", p.sector],["Start date", p.start],["Fee account", eur(p.fee)]]
+       ["Project drawing", p.drawing],["Sector", p.sector],["Start date", p.start],
+       ["Fee account", canSeeFinance() ? eur(p.fee) : '<span style="opacity:.6">'+svg(I.lock,2)+' restricted</span>']]
       .map(f => '<div><div class="k">'+f[0]+'</div><div class="v">'+f[1]+'</div></div>').join("")
     + '</div></section>';
   return head + secPanel(p);
@@ -1222,10 +1299,12 @@ function viewProject(){
 function secPanel(p){
   const it = pnavItem(state.sec);
   if(it && it.later) return panelLater(it.t);
+  if(it && it.fin && !canSeeFinance()) return panelRestricted();
   switch(state.sec){
     case "settings": return panelSettings(p);
     case "tasks": return panelTasks(p);
     case "issues": return panelIssues(p);
+    case "checklist": return panelChecklist(p);
     case "inspections": return state.ino ? panelInspection(p, insp(p, state.ino)) : panelInspections(p);
     case "plan": return panelPlan(p);
     case "drawings": return panelDrawings(p);
@@ -1244,11 +1323,57 @@ function panelLater(name){
     + '<div style="margin-top:14px"><button class="btn sm" data-act="scope">See the staged plan</button></div>'
     + '</div></div></section>';
 }
+function panelRestricted(){
+  return '<section class="card"><div class="card-b"><div class="empty" style="padding:44px 16px">'
+    + svg(I.lock,1.6) + '<div style="margin-top:9px; font-weight:600; color:var(--ink-2)">Financial information is restricted</div>'
+    + '<div style="margin-top:5px; max-width:52ch; margin-left:auto; margin-right:auto">Invoices, the payment schedule and the fee account are visible only to team members with finance access on this project. Access is set on the project settings page.</div>'
+    + '<div style="margin-top:14px"><button class="btn sm" data-sec="settings">Open project settings</button></div>'
+    + '</div></div></section>';
+}
+function panelChecklist(p){
+  const req = p.checklist.filter(c => c[0]).length;
+  const done = p.checklist.filter(c => c[1]).length;
+  const outstanding = p.checklist.filter(c => c[0] && !c[1]).length;
+  return '<div class="stack">'
+  + '<div class="page-head" style="margin:0"><div><h1 style="font-size:18px">Project checklist</h1>'
+    + '<div class="sub">The practice&#39;s standing compliance list, held on every project. Mark an item as required for this job, then tick it off when it is done.</div></div>'
+    + '<div class="actions"><button class="btn sm" data-act="soon">'+svg(I.dl)+'Export</button>'
+    + '<button class="btn sm" data-act="soon">'+svg(I.file)+'Print</button></div></div>'
+  + '<div class="kpis" style="grid-template-columns:repeat(3,minmax(0,1fr))">'
+    + kpiTile("Required on this project", req, "of " + p.checklist.length + " standing items", "")
+    + kpiTile("Completed", done, req ? Math.round(done/req*100) + "% of what is required" : "nothing marked required", "resolved")
+    + kpiTile("Outstanding", outstanding, outstanding ? "still to be actioned" : "nothing outstanding", outstanding ? "attn" : "")
+  + '</div>'
+  + '<section class="card"><div class="card-h">'+svg(I.check,1.8)+'<h3>Items</h3>'
+    + '<div class="r"><span class="eyebrow">tick both columns as they apply</span></div></div>'
+    + '<div class="card-b flush tbl-wrap"><table><thead><tr><th style="width:auto">Item</th>'
+    + '<th class="r" style="width:150px">To be checked<br>if required</th>'
+    + '<th class="r" style="width:110px">Completed</th></tr></thead><tbody>'
+    + CHECKLIST_ITEMS.map((t,ix) => {
+        const c = p.checklist[ix];
+        return '<tr'+(c[1]?' style="opacity:.66"':'')+'><td style="font-weight:500'+(c[1]?'; text-decoration:line-through':'')+'">'+t+'</td>'
+        + '<td class="r"><button class="tick'+(c[0]?" on":"")+'" data-chk="'+ix+'.0" aria-pressed="'+c[0]+'" aria-label="Required"'
+          + ' style="margin-left:auto">'+svg(I.check)+'</button></td>'
+        + '<td class="r"><button class="tick'+(c[1]?" on":"")+'" data-chk="'+ix+'.1" aria-pressed="'+c[1]+'" aria-label="Completed"'
+          + ' style="margin-left:auto">'+svg(I.check)+'</button></td></tr>'; }).join("")
+    + '</tbody></table></div>'
+    + '<div class="plan-legend"><span>Items marked required but not completed appear on the project overview until they are closed out.</span></div>'
+    + '</section></div>';
+}
 function panelOverview(p){
   const ins = p.inspections;
   const last = ins.find(i => i.status !== "scheduled");
   const next = ins.find(i => i.status === "scheduled");
+  const mine = tasksFor(p.id);
+  const openT = mine.filter(t => t.status !== "done");
+  const doneT = mine.filter(t => t.status === "done");
+  const lateT = mine.filter(isOverdue);
+  const chkOut = p.checklist.filter(c => c[0] && !c[1]).length;
   return '<div class="stack">'
+    + (needsVisit(p) ? '<div class="callout warn">'+svg(I.alert)
+        + '<p><b>No site visit booked for next month.</b> This project is active and has nothing scheduled for September 2026. '
+        + 'Schedule a visit and assign an engineer so the inspection record stays continuous.</p>'
+        + '<button class="btn sm primary" data-act="newinsp" style="flex:none">'+svg(I.plus)+'Schedule visit</button></div>' : '')
     + '<section class="card"><div class="card-h">'+svg(I.chart,1.8)+'<h3>Stage tracking</h3>'
       + '<div class="r"><span class="eyebrow">target, actual and stage owner</span></div></div>'
       + '<div class="card-b"><div class="stages">'
@@ -1292,12 +1417,53 @@ function panelOverview(p){
           + '<div class="num" style="font-size:16px; font-weight:600">'+next.date+'</div></div>'
         : '<div class="empty" style="padding:14px 0">Nothing scheduled.</div>')
       + '</div></section>'
-    + '<section class="card"><div class="card-h">'+svg(I.euro,1.8)+'<h3>Fee position</h3></div><div class="card-b">'
-      + '<div class="row" style="gap:22px; align-items:flex-start"><div class="fact"><div class="k">Fee account</div><div class="v mono">'+eur(p.fee)+'</div></div>'
-      + '<div class="fact"><div class="k">Invoiced</div><div class="v mono">'+eur(p.invoiced)+'</div></div></div>'
-      + '<div class="meter" style="margin-top:11px"><i style="width:'+Math.round(p.invoiced/p.fee*100)+'%"></i></div>'
-      + '<p class="hint" style="margin-top:9px">'+Math.round(p.invoiced/p.fee*100)+'% of the fee account invoiced against the payment schedule.</p>'
-      + '</div></section></div></div></div>';
+    + (canSeeFinance()
+      ? '<section class="card"><div class="card-h">'+svg(I.euro,1.8)+'<h3>Fee position</h3>'
+        + '<div class="r"><span class="chip grey">'+svg(I.lock,2)+'restricted</span></div></div><div class="card-b">'
+        + '<div class="row" style="gap:22px; align-items:flex-start"><div class="fact"><div class="k">Fee account</div><div class="v mono">'+eur(p.fee)+'</div></div>'
+        + '<div class="fact"><div class="k">Invoiced</div><div class="v mono">'+eur(p.invoiced)+'</div></div></div>'
+        + '<div class="meter" style="margin-top:11px"><i style="width:'+Math.round(p.invoiced/p.fee*100)+'%"></i></div>'
+        + '<p class="hint" style="margin-top:9px">'+Math.round(p.invoiced/p.fee*100)+'% of the fee account invoiced against the payment schedule.</p>'
+        + '</div></section>'
+      : '<section class="card"><div class="card-b"><div class="row" style="gap:10px; align-items:flex-start">'
+        + '<span style="color:var(--ink-3)">'+svg(I.lock,1.8)+'</span>'
+        + '<p class="hint" style="flex:1">Fee and invoicing figures are hidden. You do not have finance access on this project.</p>'
+        + '</div></div></section>')
+    + '</div></div>'
+    + '<div class="grid" style="grid-template-columns:minmax(0,1.4fr) minmax(0,1fr)">'
+    + '<section class="card"><div class="card-h">'+svg(I.check,1.8)+'<h3>Task summary</h3>'
+      + '<div class="r"><span class="eyebrow">updates whenever a task is created</span>'
+      + '<button class="btn sm" data-sec="tasks">Open schedule</button></div></div>'
+      + '<div class="card-b flush">'
+      + '<div class="mstrip" style="grid-template-columns:repeat(4,1fr)">'
+        + '<div class="mstat"><span class="k">Open</span><span class="v">'+openT.length+'</span></div>'
+        + '<div class="mstat"><span class="k">Overdue</span><span class="v" style="color:'+(lateT.length?"var(--attn)":"inherit")+'">'+lateT.length+'</span></div>'
+        + '<div class="mstat"><span class="k">Completed</span><span class="v">'+doneT.length+'</span></div>'
+        + '<div class="mstat"><span class="k">Hours</span><span class="v">'+mine.reduce(function(n,t){return n+loggedH(t);},0)+'</span></div>'
+      + '</div>'
+      + (mine.length ? mine.slice(0,5).map(t => '<div class="row" style="padding:10px 15px; border-bottom:1px solid var(--line); gap:10px">'
+          + '<span class="tick'+(t.status==="done"?" on":"")+'" style="pointer-events:none">'+svg(I.check)+'</span>'
+          + '<span style="flex:1; min-width:0"><span style="display:block; font-size:12.5px; font-weight:500'+(t.status==="done"?"; text-decoration:line-through":"")+'">'+t.t+'</span>'
+          + '<span class="eyebrow">'+t.who.join(", ")+' &middot; due '+t.due+(t.src?" &middot; inspection "+t.src.ino:"")+'</span></span>'
+          + (isOverdue(t) ? '<span class="chip attn">overdue</span>' : '') + '</div>').join("")
+        : '<div class="empty">No tasks on this project yet.</div>')
+      + '<div class="row" style="padding:11px 15px"><span class="eyebrow" style="flex:1">historical record kept for completed actions</span>'
+      + '<button class="btn sm primary" data-act="newtask">'+svg(I.plus)+'Add task</button></div>'
+      + '</div></section>'
+    + '<section class="card"><div class="card-h">'+svg(I.list,1.8)+'<h3>Checklist</h3>'
+      + '<div class="r"><button class="btn sm" data-sec="checklist">Open</button></div></div>'
+      + '<div class="card-b">'
+      + '<div class="row" style="gap:9px"><div class="meter" style="flex:1">'
+      + '<i class="'+(chkOut?"wip":"resolved")+'" style="width:'+(p.checklist.filter(c=>c[0]).length
+          ? Math.round(p.checklist.filter(c=>c[1]).length / p.checklist.filter(c=>c[0]).length * 100) : 0)+'%"></i></div>'
+      + '<span class="num" style="font-size:12px">'+p.checklist.filter(c=>c[1]).length+' / '+p.checklist.filter(c=>c[0]).length+'</span></div>'
+      + (chkOut ? '<div style="margin-top:12px; display:flex; flex-direction:column; gap:7px">'
+          + CHECKLIST_ITEMS.map((t,ix) => p.checklist[ix][0] && !p.checklist[ix][1]
+              ? '<div class="row" style="gap:8px; align-items:flex-start"><span style="color:var(--wip); flex:none">'+svg(I.alert,2)+'</span>'
+                + '<span style="font-size:12px; color:var(--ink-2)">'+t+'</span></div>' : '').join("")
+          + '</div>'
+        : '<p class="hint" style="margin-top:11px">Nothing outstanding on the compliance checklist.</p>')
+      + '</div></section></div></div>';
 }
 
 /* ---------- inspection register ---------- */
@@ -1367,7 +1533,8 @@ function panelInspection(p, i){
       + Object.keys(ST).filter(k => counts[k]).map(k => '<span class="chip '+ST[k].c+'">'+counts[k]+' '+ST[k].t.toLowerCase()+'</span>').join("")
       + '<button class="btn sm" data-act="soon">'+svg(I.plus)+'Attach images</button>'
       + '<button class="btn sm ghost" data-act="soon">Re-number</button>'
-      + '<button class="btn sm ghost" data-act="soon">Split inspection</button></div></div>'
+      + '<button class="btn sm ghost" data-act="soon">Split inspection</button>'
+      + '<button class="btn sm" data-act="soon">'+svg(I.dl)+'Download all photos</button></div></div>'
       + (f.length ? '<div>' + f.map((x,idx) => findingRow(i, x, idx)).join("") + '</div>'
           + '<div class="autosave"><span class="pulse"></span>Changes save automatically. Last saved 14:52 &mdash; '+f.length+' findings on this report.</div>'
         : '<div class="empty">No findings captured yet. Photos taken on site land here with their date, time and GPS position.</div>')
@@ -1398,6 +1565,7 @@ function findingRow(i, x, idx){
       + '<div class="flinks">'
         + '<button class="flink" data-act="locate" data-idx="'+idx+'">Locate image</button>'
         + '<button class="flink" data-act="soon">View full size</button>'
+        + '<button class="flink" data-act="soon">Download original (4032&times;3024, 3.8&nbsp;MB)</button>'
         + '<button class="flink" data-act="soon">Rotate &minus;90</button>'
         + '<button class="flink" data-act="soon">Rotate +90</button>'
         + '<button class="flink" data-act="soon">Move image</button>'
@@ -1598,7 +1766,7 @@ function reportSheet(p, i){
       + '<div class="v">'+issueCount(i)+' of '+i.images+' findings require contractor action</div></div>'
     + '<div class="band"><div style="display:flex; gap:15px; align-items:center; flex-wrap:wrap">'
       + '<div class="qr">QR<br>CODE</div>'
-      + '<div style="flex:1; min-width:200px">To update the status of any of the issues identified in this report, click the link below, scan the QR code, or visit <b>sitepal.io</b> and enter reference number <b>'
+      + '<div style="flex:1; min-width:200px">To update the status of any of the issues identified in this report, click the link below, scan the QR code, or visit <b>sitetrack.io</b> and enter reference number <b>'
       + (i.portal || "&mdash;&mdash;&mdash;") + '</b>.'
       + '<div style="margin-top:9px"><span style="color:#0E6E96; text-decoration:underline">Click here to view these issues in the contractor portal</span></div></div>'
       + '</div></div>'
@@ -1641,13 +1809,14 @@ function portalSheet(p, i){
     + '<button class="btn" data-act="close">'+svg(I.back)+'Back to inspection</button>'
     + '<span class="chip grey">external view &mdash; no MFA login required</span></div>'
     + '<div style="max-width:720px; margin:0 auto"><div class="portal">'
-    + '<div class="portal-h"><div><div class="brandline">sitepal.io &middot; contractor portal</div>'
+    + '<div class="portal-h"><div><div class="brandline">sitetrack.io &middot; contractor portal</div>'
       + '<h2>'+p.ref+' &mdash; '+p.name+'</h2>'
       + '<div style="font-size:12px; color:#8FA8A4; margin-top:4px">Inspection '+i.no+' &middot; '+i.type+' &middot; '+i.date
       + ' &middot; issued by '+i.by+', MFA Consulting Engineers</div></div>'
       + '<div class="refbox"><div class="k">Reference</div><div class="v">'+(i.portal||"918-769")+'</div></div></div>'
     + '<div class="portal-b">'
     + '<div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:4px">'
+      + '<span class="chip pchip">'+svg(I.cam,2)+' photos on every entry</span>'
       + '<span class="chip pchip">'+issues.length+' open items</span>'
       + '<span class="chip pchip">'+i.images+' photos</span>'
       + '<span class="chip pchip">drawing: '+i.drawing+'</span></div>'
@@ -1657,6 +1826,11 @@ function portalSheet(p, i){
         + '<div style="flex:1; min-width:0"><div class="ref"># '+i.no+' / '+f.n+'</div>'
         + '<h4>'+f.c+'</h4><div class="el">'+f.el+' &middot; pinned on '+i.drawing+' &middot; '+f.time+'</div></div>'
         + '<span class="chip '+ST[f.st].c+'" style="flex:none">'+ST[f.st].t+'</span></div>'
+        + '<div class="pphotos">'
+        + [1,2,3].map(function(n){ return '<div class="pphoto"><span>'+ (f.n) + '.' + n + '</span></div>'; }).join("")
+        + '<div class="pphoto map">'+mapmini(f.gps)+'</div></div>'
+        + '<div class="pphoto-cap">3 photos from this inspection, plus the pinned location on '+i.drawing+'. '
+        + '<button class="flink" data-act="soon" style="color:#7FE9E2">Download originals</button></div>'
         + '<div class="pthread">'
         + '<div class="pmsg"><div class="av">'+initials(i.by)+'</div><div class="bd">'
           + '<div class="who">'+i.by+'<span>MFA &middot; '+i.date+'</span></div>'
@@ -2017,6 +2191,16 @@ document.addEventListener("click", e => {
     const v = el.dataset.week; state.week = v === "0" ? 0 : state.week + (+v); return render();
   }
   if((el = hit("[data-calsort]"))){ state.calSort = el.dataset.calsort; return render(); }
+  if((el = hit("[data-calweeks]"))){ state.calWeeks = +el.dataset.calweeks; return render(); }
+  if((el = hit("[data-chk]"))){
+    const p = byId(state.pid), parts = el.dataset.chk.split("."), ix = +parts[0], col = +parts[1];
+    p.checklist[ix][col] = !p.checklist[ix][col];
+    if(col === 1 && p.checklist[ix][1]) p.checklist[ix][0] = true;
+    render();
+    return toast(col === 0
+      ? (p.checklist[ix][0] ? "Marked as required on this project" : "No longer required")
+      : (p.checklist[ix][1] ? "Checklist item completed" : "Reopened"));
+  }
   if((el = hit("[data-calfil]"))){ state.calFilter = el.dataset.calfil; return render(); }
   if((el = hit("[data-addtask]"))){
     const [who, date] = el.dataset.addtask.split("|");
@@ -2114,6 +2298,12 @@ document.addEventListener("click", e => {
     if(a === "mobsave"){ closeAll(); return toast("Finding saved and queued to sync"); }
     if(a === "moball"){ state.mobAll = true; return render(); }
     if(a === "mobone"){ state.mobAll = false; return render(); }
+    if(a === "finpreview"){
+      state.financePreview = !state.financePreview; render();
+      return toast(state.financePreview
+        ? "Previewing as a team member without financial access"
+        : "Back to your own access level");
+    }
     if(a === "showhide") return modalShowHide();
     if(a === "newproject"){ state.draft = null; return modalNewProject(); }
     if(a === "discard-project"){ state.draft = null; return closeAll(); }
@@ -2534,6 +2724,20 @@ function panelSettings(p){
         : '<div class="empty">No folders configured.</div>')
       + '<div style="padding:12px 15px"><button class="btn sm" data-act="soon">'+svg(I.plus)+'Add folder</button></div>'
       + '</div></section></div>' : '')
+  + '<section class="card"><div class="card-h">'+svg(I.lock,1.8)+'<h3>Access permissions</h3>'
+    + '<div class="r"><span class="eyebrow">who may see commercial figures on this project</span></div></div>'
+    + '<div class="card-b flush tbl-wrap"><table><thead><tr><th>Team member</th><th>Role</th>'
+    + '<th>Project record</th><th>Inspections</th><th>Financial information</th></tr></thead><tbody>'
+    + PEOPLE.map(n => '<tr><td><span class="row" style="gap:8px"><span class="avatar sm">'+initials(n)+'</span><b>'+n+'</b></span></td>'
+      + '<td style="font-size:12.5px; color:var(--ink-2)">'+(ROLE[n]||"")+'</td>'
+      + '<td><span class="chip resolved">Full</span></td><td><span class="chip resolved">Full</span></td>'
+      + '<td>'+(FINANCE_ACCESS[n] ? '<span class="chip resolved">Visible</span>'
+          : '<span class="chip grey">'+svg(I.lock,2)+'Hidden</span>')+'</td></tr>').join("")
+    + '</tbody></table></div>'
+    + '<div class="plan-legend"><span>Invoices, the payment schedule and the fee account are hidden from anyone without financial access. Everything else on the project stays visible to the whole team.</span>'
+    + '<span style="margin-left:auto"><button class="btn sm" data-act="finpreview">'
+    + (state.financePreview ? 'Stop previewing' : 'Preview without financial access') + '</button></span></div>'
+    + '</section>'
   + (sh.contacts ? '<section class="card"><div class="card-h">'+svg(I.users,1.8)+'<h3>Client contacts</h3>'
     + '<div class="r"><span class="eyebrow">read by reports and the contractor portal</span></div></div>'
     + '<div class="card-b flush">'+contactsTable(p,"set")+'</div></section>' : '')
@@ -2681,17 +2885,22 @@ TASKS.filter(t => loggedH(t) >= t.estH && t.estH > 0).forEach(t => { if(dnum(t.d
 /* ---------- the practice task calendar, by employee ---------- */
 const DAYNAMES = ["Mon","Tue","Wed","Thu","Fri"];
 const MONTHS3 = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-function weekDates(off){
+function weekDates(off, weeks){
   const base = new Date(2026, 7, 24);
   base.setDate(base.getDate() + off * 7);
-  return Array.from({length:5}, (_,i) => {
+  const n = 5 * (weeks || 1);
+  return Array.from({length:n}, (_,i) => {
+    const wk = Math.floor(i / 5);
+    i = wk * 7 + (i % 5);
     const d = new Date(base); d.setDate(base.getDate() + i);
     return {key:String(d.getDate()).padStart(2,"0")+"."+String(d.getMonth()+1).padStart(2,"0")+"."+d.getFullYear(),
-      lbl:DAYNAMES[i], num:d.getDate(), mon:MONTHS3[d.getMonth()]};
+      lbl:DAYNAMES[i % 7], num:d.getDate(), mon:MONTHS3[d.getMonth()], wk:Math.floor(i / 7)};
   });
 }
 function viewCalendar(){
-  const days = weekDates(state.week || 0);
+  const weeks = state.calWeeks || 1;
+  const days = weekDates(state.week || 0, weeks);
+  const dense = weeks > 1;
   const filt = state.calFilter || "all";
   const inFilter = t => filt === "all" || (filt === "general" ? isGeneral(t) : t.pid === filt);
   const rows = PEOPLE.slice().map(n => {
@@ -2703,7 +2912,7 @@ function viewCalendar(){
 
   const chip = t => '<div class="ctask'+(t.status==="done"?" done":"")+'" data-tid="'+t.id+'"'
     + ' draggable="true" role="button" tabindex="0"'
-    + ' style="border-left-color:'+pcolor(t.pid)+'" title="'+t.t.replace(/"/g,"&quot;")
+    + ' style="border-left-color:'+pcolor(t.pid)+'; --pc:'+pcolor(t.pid)+'" title="'+t.t.replace(/"/g,"&quot;")
     + (shares(t) ? " \u2014 shared with " + t.who.join(", ") : "") + '">'
     + '<span class="ctop"><span class="cref">'+(t.pid || (t.cat||"General"))+'</span>'
     + '<span class="ch'+(loggedH(t)>=t.estH&&t.estH?" full":"")+'">'+t.estH+'h</span></span>'
@@ -2715,6 +2924,9 @@ function viewCalendar(){
   return '<div class="page-head"><div><h1>Task calendar</h1>'
     + '<div class="sub">Every task in the practice for the week, by employee. Project tasks show their project number and appear on that project&#39;s own task schedule; general time is booked here and stays out of project fees.</div></div>'
     + '<div class="actions">'
+    + '<div class="fchips">'
+    + [1,2,4].map(w => '<button class="fchip" data-calweeks="'+w+'" aria-pressed="'+(weeks===w)+'">'+w+' week'+(w>1?"s":"")+'</button>').join("")
+    + '</div>'
     + '<div class="fchips"><button class="fchip" data-calsort="name" aria-pressed="'+((state.calSort||"name")==="name")+'">A&ndash;Z</button>'
     + '<button class="fchip" data-calsort="load" aria-pressed="'+(state.calSort==="load")+'">By load</button></div>'
     + '<button class="btn sm" data-act="logtime">'+svg(I.clock)+'Log general time</button>'
@@ -2732,10 +2944,11 @@ function viewCalendar(){
         + p.ref+'</button>').join("")
       + '<button class="fchip" data-calfil="general" aria-pressed="'+(filt==="general")+'">General</button>'
       + '</div></div></div>'
-    + '<div class="cal-wrap"><div class="cal">'
+    + '<div class="cal-wrap"><div class="cal'+(dense?" dense":"")+'" style="grid-template-columns:'
+    + (dense ? "150px" : "196px") + ' repeat('+days.length+', minmax('+(weeks===1?150:weeks===2?92:62)+'px,1fr))">'
     + '<div class="cal-h cal-emp-h">Employee</div>'
-    + days.map(d => '<div class="cal-h'+(d.key===TODAY?" today":"")+'"><span>'+d.lbl+'</span>'
-      + '<b>'+d.num+' '+d.mon+'</b>'+(d.key===TODAY?'<span class="tdot">today</span>':'')+'</div>').join("")
+    + days.map(d => '<div class="cal-h'+(d.key===TODAY?" today":"")+(d.wk&&d.lbl==="Mon"?" wkstart":"")+'"><span>'+d.lbl+'</span>'
+      + '<b>'+d.num+(dense?'':' '+d.mon)+'</b>'+(d.key===TODAY?'<span class="tdot">today</span>':'')+'</div>').join("")
     + rows.map(r => {
         const over = r.h > CAPACITY;
         return '<div class="cal-emp"><div class="row" style="gap:8px"><span class="avatar">'+initials(r.n)+'</span>'
@@ -2746,8 +2959,8 @@ function viewCalendar(){
         + days.map(d => {
             const cell = r.mine.filter(t => t.date === d.key);
             const ch = cell.reduce((s,t) => s + t.estH, 0);
-            return '<div class="cal-cell'+(ch>8?" hot":"")+(d.key===TODAY?" today":"")+'" data-cell="'+r.n+"|"+d.key+'">'
-              + (ch ? '<span class="cellh'+(ch>8?" over":"")+'">'+ch+'h</span>' : '')
+            return '<div class="cal-cell'+(ch>8?" hot":"")+(d.key===TODAY?" today":"")+(d.wk&&d.lbl==="Mon"?" wkstart":"")+'" data-cell="'+r.n+"|"+d.key+'">'
+              + (ch && !dense ? '<span class="cellh'+(ch>8?" over":"")+'">'+ch+'h</span>' : '')
               + cell.map(chip).join("")
               + '<button class="cell-add" data-addtask="'+r.n+"|"+d.key+'" aria-label="Add task for '+r.n+'">'+svg(I.plus,2)+'</button>'
               + '</div>'; }).join(""); }).join("")
@@ -3040,8 +3253,6 @@ MOB.start = {n:"Start inspection", note:"Four taps to open a record. Type decide
     + '<div class="srow"><label>Date on site</label><input value="26.08.2026" readonly></div>'
     + '<div class="srow"><label>Weather</label><input value="Dry, overcast 17C"></div>'
     + '<div class="srow"><label>Present during inspection</label><input placeholder="Site foreman, contractor"></div>'
-    + '<div class="srow"><label>Drawing for pin locations</label><select>'
-      + (p.drawings.length ? p.drawings.map(d => '<option>'+d.t+'</option>').join("") : '<option>No drawings</option>')+'</select></div>'
     + (state.mobType === "BCAR"
         ? '<button class="btn accent" style="justify-content:center" data-mscreen="plan">Open inspection plan</button>'
           + '<div class="mnote">'+svg(I.clip,1.9)+'<span>BCAR: the approved plan loads in order. Elements still showing open findings from the last visit are carried forward automatically.</span></div>'
@@ -3088,6 +3299,8 @@ MOB.finding = {n:"Finding detail", note:"One screen per finding. Status is four 
     + '<button class="mphoto" data-mtoast="Photo 14 &mdash; full size" style="width:100%; border:0; border-bottom:1px solid var(--line)">'
       + '<span class="tag">photo 14 &middot; tap to enlarge</span></button>'
     + '<div class="mgpsline">'+svg(I.pin,2)+' 54.252252, -8.452009 &middot; 26.08.2026 10:42</div>'
+    + '<div style="padding:0 12px 10px"><div class="mmap">'+mapmini("54.252252, -8.452009")+'</div>'
+      + '<p class="hint" style="margin-top:5px">Map location stored with the photo and printed in the report.</p></div>'
     + '<div style="padding:0 12px 12px">'
     + '<div class="srow"><label>Comment</label>'
       + '<textarea rows="3">wall ties missing either side of expansion joint</textarea>'
@@ -3113,7 +3326,21 @@ MOB.finding = {n:"Finding detail", note:"One screen per finding. Status is four 
 /* ---- 10. pin on drawing ---- */
 MOB.pin = {n:"Pin on drawing", note:"Pinch, pan, tap. The pin takes the colour of the finding status, so the drawing becomes the issue map the contractor works from.",
   r:() => { const f = mobI().findings.slice(0,9);
-    return mHead("Place the pin", "0464P-C-201 rev D &middot; Drainage layout", "finding")
+    const p = mobP();
+    const floors = [];
+    p.drawings.forEach(function(d){ if(floors.indexOf(d.floor || "Unassigned") < 0) floors.push(d.floor || "Unassigned"); });
+    return mHead("Place the pin", "Pick a drawing, then tap the position", "finding")
+    + '<div class="mrow" style="border-bottom:1px solid var(--line)">'
+      + '<div class="eyebrow">Drawing</div>'
+      + '<select style="margin-top:5px" data-mtoast="Drawing changed - pins reload for this sheet">'
+      + floors.map(function(f){
+          return '<optgroup label="' + f + '">'
+            + p.drawings.filter(function(d){ return (d.floor||"Unassigned") === f; })
+                .map(function(d){ return '<option'+(d.t==="Drainage layout"?" selected":"")+'>'
+                  + (d.area ? d.area + " \u2014 " : "") + d.t + " (" + d.no + " rev " + d.rev + ")</option>"; }).join("")
+            + '</optgroup>'; }).join("")
+      + '</select>'
+      + '<p class="hint" style="margin-top:6px">Every drawing uploaded to '+p.ref+', grouped by floor and area.</p></div>'
     + '<div class="mbody" style="padding:0">'
     + '<div class="mdwg" data-mpinarea><svg viewBox="0 0 100 70">'+siteplan()
       + f.map(x => '<g class="pin"><circle cx="'+x.x+'" cy="'+x.y+'" r="1.65" fill="'+ST[x.st].pin+'"/>'
