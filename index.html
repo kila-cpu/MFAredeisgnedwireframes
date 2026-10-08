@@ -183,6 +183,27 @@ td.r,th.r{text-align:right}
 .fact .v{font-size:13.5px; font-weight:600; margin-top:2px}
 .fact .v.mono{font-family:var(--mono); font-weight:500; letter-spacing:-.02em}
 
+/* ---------------- site visits to schedule ---------------- */
+.visitrow{display:flex; gap:13px; align-items:stretch; width:100%; text-align:left; color:inherit;
+  background:none; padding:14px 16px; border-bottom:1px solid var(--line); transition:background .12s}
+.visitrow:hover{background:var(--surface-2)}
+.vr-bar{width:3px; border-radius:100px; background:var(--attn); flex:none}
+.vr-body{flex:1; min-width:0; display:flex; flex-direction:column; gap:6px}
+.vr-top{display:flex; align-items:baseline; gap:9px; flex-wrap:wrap}
+.vr-top b{font-size:13.5px; font-weight:600; line-height:1.3}
+.vr-ref{font-size:10.5px; color:var(--ink-3); letter-spacing:.04em}
+.vr-why{display:flex; align-items:center; gap:6px; font-size:12px; font-weight:500; color:var(--attn)}
+.vr-why svg{width:12px; height:12px; flex:none}
+.vr-who{display:flex; align-items:center; gap:7px; font-size:11.5px; color:var(--ink-3); flex-wrap:wrap}
+.vr-dot{color:var(--line-2)}
+.vr-act{flex:none; align-self:center; display:inline-flex; align-items:center; gap:5px;
+  padding:6px 11px; border-radius:var(--r); border:1px solid var(--line-2); background:var(--surface);
+  font-size:12px; font-weight:500; white-space:nowrap; transition:border-color .12s, color .12s, background .12s}
+.vr-act svg{width:13px; height:13px}
+.visitrow:hover .vr-act{border-color:var(--accent); color:var(--accent-ink); background:var(--brand-tint)}
+.vr-foot{display:flex; align-items:center; gap:8px; padding:12px 16px; font-size:11.5px; color:var(--ink-3);
+  background:var(--surface-2); border-top:1px solid var(--line)}
+.vr-foot svg{width:13px; height:13px; flex:none}
 /* ---------------- KPI ---------------- */
 .kpis{display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:11px}
 .kpi{background:var(--surface); border:1px solid var(--line); border-radius:var(--r-lg); padding:12px 13px 10px; display:flex; flex-direction:column; gap:6px; box-shadow:var(--shadow); position:relative; overflow:hidden}
@@ -1068,6 +1089,11 @@ function statusControl(p){
 const NEXT_MONTH = "09.2026";
 const visitBooked = p => p.inspections.some(i => i.status === "scheduled"
   && (i.date.slice(3) === NEXT_MONTH || dnum(i.date) >= TODAYN));
+const lastVisit = p => {
+  const done = p.inspections.filter(i => i.status !== "scheduled")
+    .sort((a,b) => dnum(b.date).localeCompare(dnum(a.date)));
+  return done.length ? done[0].date : null;
+};
 const needsVisit = p => p.status !== "complete" && p.status !== "archived" && !visitBooked(p);
 const visitFlag = p => needsVisit(p)
   ? '<span class="chip attn" title="No site visit scheduled for the month ahead">'+svg(I.alert,2)+'No visit booked</span>' : '';
@@ -1223,13 +1249,19 @@ function viewDashboard(){
     + (PROJECTS.filter(needsVisit).length ? '<section class="card"><div class="card-h">'+svg(I.alert,1.8)
       + '<h3>Site visits to schedule</h3><div class="r"><span class="chip attn">'+PROJECTS.filter(needsVisit).length+'</span></div></div>'
       + '<div class="card-b flush">'
-      + PROJECTS.filter(needsVisit).map(x => '<div class="attn" data-open="'+x.id+'" data-sec="overview">'
-        + '<div class="sv red"></div><div class="bd"><h4>'+x.name+'</h4>'
-        + '<div class="sub"><span class="mono" style="font-size:11px">'+x.ref+'</span>'
-        + '<span style="color:var(--line-2)">&middot;</span><span>nothing booked for September</span>'
-        + '<span style="color:var(--line-2)">&middot;</span><span>'+x.inspector+'</span></div></div>'
-        + '<span class="chip attn">schedule</span></div>').join("")
-      + '<div style="padding:11px 15px"><span class="hint">Checked automatically against every active project each month.</span></div>'
+      + PROJECTS.filter(needsVisit).map(x => {
+          const lv = lastVisit(x);
+          return '<button class="visitrow" data-open="'+x.id+'" data-sec="overview">'
+          + '<span class="vr-bar"></span>'
+          + '<span class="vr-body">'
+            + '<span class="vr-top"><b>'+x.name+'</b><span class="mono vr-ref">'+x.ref+'</span></span>'
+            + '<span class="vr-why">'+svg(I.alert,2.2)+'No visit booked for September</span>'
+            + '<span class="vr-who"><span class="avatar sm">'+initials(x.inspector)+'</span>'
+            + x.inspector + '<span class="vr-dot">&middot;</span>'
+            + (lv ? 'last visit ' + lv : 'no inspections yet') + '</span>'
+          + '</span>'
+          + '<span class="vr-act">Schedule'+svg(I.arrow,2)+'</span></button>'; }).join("")
+      + '<div class="vr-foot">'+svg(I.clock,1.8)+'Checked automatically against every active project each month.</div>'
       + '</div></section>' : '')
     + '<section class="card"><div class="card-h">'+svg(I.alert,1.8)+'<h3>Issues awaiting contractor</h3></div>'
       + '<div class="card-b flush">' + F001.filter(f => f.st === "attn" && f.c).slice(0,5).map(f =>
