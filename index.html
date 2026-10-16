@@ -161,6 +161,11 @@ td.r,th.r{text-align:right}
 .meter{height:5px; border-radius:100px; background:var(--surface-3); overflow:hidden; min-width:56px}
 .meter i{display:block; height:100%; background:var(--accent); border-radius:100px}
 .meter i.wip{background:var(--wip)} .meter i.attn{background:var(--attn)} .meter i.resolved{background:var(--resolved)}
+.roleseg{display:flex; border:1px solid var(--line); border-radius:var(--r); overflow:hidden; background:var(--surface); flex:none}
+.roleseg button{padding:4px 10px; font-size:11px; font-family:var(--mono); color:var(--ink-3); border-right:1px solid var(--line); white-space:nowrap}
+.roleseg button:last-child{border-right:0}
+.roleseg button:hover{color:var(--ink)}
+.roleseg button[aria-pressed="true"]{background:var(--brand-tint); color:var(--accent-ink); font-weight:600}
 .empty{padding:30px 16px; text-align:center; color:var(--ink-3); font-size:12.5px}
 .stwrap{position:relative; display:inline-flex; align-items:center; border-radius:100px; border:1px solid transparent; padding-right:19px}
 .stwrap svg{position:absolute; right:6px; width:11px; height:11px; pointer-events:none; opacity:.7; stroke-width:2.2}
@@ -183,6 +188,15 @@ td.r,th.r{text-align:right}
 .fact .v{font-size:13.5px; font-weight:600; margin-top:2px}
 .fact .v.mono{font-family:var(--mono); font-weight:500; letter-spacing:-.02em}
 
+/* ---------------- task tooltip ---------------- */
+#tasktip{position:fixed; z-index:95; max-width:290px; background:var(--ink); color:var(--bg);
+  border-radius:7px; padding:10px 12px; box-shadow:var(--shadow-lift); pointer-events:none;
+  opacity:0; transition:opacity .12s; font-size:12px; line-height:1.45}
+#tasktip.on{opacity:1}
+#tasktip .tt-ref{font-family:var(--mono); font-size:9.5px; letter-spacing:.09em; text-transform:uppercase; opacity:.7}
+#tasktip .tt-proj{font-weight:600; font-size:12.5px; margin-top:2px}
+#tasktip .tt-task{margin-top:6px; padding-top:6px; border-top:1px solid color-mix(in srgb, var(--bg) 22%, transparent)}
+#tasktip .tt-meta{display:flex; flex-wrap:wrap; gap:4px 10px; margin-top:6px; font-family:var(--mono); font-size:9.5px; opacity:.75}
 /* ---------------- checklist roll-up on the overview ---------------- */
 .chkmini{margin-top:12px; border-top:1px solid var(--line)}
 .chkmini-h{display:flex; align-items:center; justify-content:space-between; padding:8px 0 4px}
@@ -251,6 +265,9 @@ td.r,th.r{text-align:right}
 .stage .pc{font-family:var(--mono); font-size:19px; font-weight:600; letter-spacing:-.03em; margin-top:6px}
 .stage .pc.done{color:var(--resolved)}
 .stage .who{font-size:10.5px; color:var(--ink-3); margin-top:6px}
+.stage-upd{display:flex; align-items:center; gap:4px; margin-top:5px; padding-top:5px;
+  border-top:1px solid var(--line); font-family:var(--mono); font-size:9px; color:var(--ink-3)}
+.stage-upd svg{width:10px; height:10px; flex:none}
 
 /* ---------------- BCAR inspection plan ---------------- */
 .plan-group{border-bottom:1px solid var(--line)}
@@ -423,7 +440,7 @@ td.r,th.r{text-align:right}
 .cal-wrap{overflow-x:auto}
 .cal{display:grid; min-width:900px}
 .cal.dense{min-width:1180px}
-.cal.dense .cal-cell, .cal.dense .cal-emp{height:70px}
+
 .cal.dense .cal-emp .eyebrow{display:none}
 .cal.dense .cal-emp > .row > span:last-child > span:first-child{font-size:11.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
 .cal.dense .cal-emp{padding:7px 9px}
@@ -436,43 +453,50 @@ td.r,th.r{text-align:right}
 .cal-h.today b{color:var(--accent-ink)}
 .cal-h .tdot{color:var(--accent-ink); font-weight:600}
 .cal-emp-h{border-left:0}
-.cal-emp{padding:8px 10px; height:92px; overflow:hidden; border-bottom:1px solid var(--line); background:var(--surface-2);
+.cal-emp{padding:8px 10px; overflow:hidden; border-bottom:1px solid var(--line); background:var(--surface-2);
   display:flex; flex-direction:column; gap:8px; justify-content:space-between}
 .cal-emp .load{display:flex; align-items:center; gap:7px}
 .cal-emp .load .meter{flex:1}
 .cal-emp .load .num{font-size:10.5px; color:var(--ink-3)}
 .cal-emp .load .num.over{color:var(--attn); font-weight:600}
-.cal-cell{border-left:1px solid var(--line); border-bottom:1px solid var(--line); padding:5px;
-  flex-direction:row !important; align-items:stretch; height:92px; overflow:hidden;
-  display:flex; gap:3px; position:relative}
+.cal-cell{border-left:1px solid var(--line); border-bottom:1px solid var(--line); padding:4px;
+  display:flex; flex-direction:column; gap:2px; align-items:stretch; overflow:hidden; position:relative}
+.cal-cell.hot{background:color-mix(in srgb, var(--attn) 11%, transparent); box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--attn) 32%, transparent); padding-top:17px}
 .cal-cell.today{background:color-mix(in srgb, var(--brand-tint) 45%, transparent)}
 .cal-cell.hot{box-shadow:inset 0 2px 0 var(--attn)}
-.cellh{position:absolute; top:5px; right:6px; font-family:var(--mono); font-size:9.5px; color:var(--ink-3)}
-.cellh.over{color:var(--attn); font-weight:600}
-.ctask{display:flex; flex-direction:column; gap:2px; text-align:left; flex:1 1 0; min-width:0; overflow:hidden;
-  background:var(--surface); border:1px solid var(--line); border-left:3px solid var(--accent);
-  border-radius:5px; padding:5px 6px; transition:box-shadow .12s, transform .12s}
-.ctask:hover{box-shadow:var(--shadow); transform:translateY(-1px)}
+.cellh{position:absolute; top:3px; right:5px; z-index:2; font-family:var(--mono); font-size:9px;
+  background:var(--attn); color:#fff; border-radius:3px; padding:1px 4px; font-weight:600; letter-spacing:.02em}
+.ctask{display:flex; flex-direction:column; text-align:left; width:100%; min-width:0; overflow:hidden; flex:none;
+  background:color-mix(in srgb, var(--pc) 12%, var(--surface)); border:1px solid var(--line);
+  border-left:3px solid var(--accent); border-radius:4px; padding:3px 5px;
+  transition:box-shadow .12s, filter .12s}
+.ctask:hover{box-shadow:var(--shadow); filter:brightness(1.04); z-index:3}
 .ctask.done{opacity:.55}
 .ctask.done .ct{text-decoration:line-through}
+.ctask.tight{padding:2px 5px; justify-content:center}
+.ctask.tight .cfoot{display:none}
+.ctask.fullday{border-left-width:4px; box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--pc) 35%, transparent)}
+.cfull{font-family:var(--mono); font-size:8px; text-transform:uppercase; letter-spacing:.08em; color:var(--accent-ink)}
+.cfoot{display:flex; align-items:center; gap:5px; margin-top:auto; padding-top:2px}
 .ctop{display:flex; align-items:baseline; gap:6px}
 .cref{font-family:var(--mono); font-size:9px; font-weight:600; letter-spacing:.04em; color:var(--ink-3);
   overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
 .ch{margin-left:auto; font-family:var(--mono); font-size:9.5px; font-weight:600; color:var(--ink-2); flex:none}
+.ctask.tight .cref{font-size:8.5px}
 .ch.full{color:var(--resolved)}
-.cal.dense .ct, .cal.dense .cbot{display:none}
-.cal.dense .ctask{padding:4px; border-left-width:3px; background:color-mix(in srgb, var(--pc) 13%, var(--surface))}
+.cal.dense .ct{display:none}
+.cal.dense .ctask{padding:2px 4px; border-left-width:3px}
 .cal.dense .ctop{flex-direction:column; gap:0; align-items:flex-start}
 .cal.dense .cref{font-size:8px; max-width:100%}
 .cal.dense .ch{margin-left:0; font-size:9px}
 .cal.dense .cell-add{display:none}
 .cal.dense .cal-emp .load .num{display:none}
-.cal-cell:has(.ctask + .ctask) .ct{-webkit-line-clamp:3}
-.ct{font-size:11px; line-height:1.3; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden}
+.cal-cell:has(.ctask + .ctask) .ct{-webkit-line-clamp:2}
+.ct{font-size:10.5px; line-height:1.28; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; margin-top:1px}
 .cbot{display:flex; align-items:center; gap:4px; font-family:var(--mono); font-size:8.5px; color:var(--ink-3)}
 .cbot svg{width:9px; height:9px}
 .clog{margin-left:auto; color:var(--resolved)}
-.cell-add{align-self:flex-end; margin-left:auto; flex:none; width:20px; height:20px; border-radius:4px;
+.cell-add{position:absolute; right:3px; bottom:3px; z-index:2; flex:none; width:20px; height:20px; border-radius:4px;
   display:grid; place-items:center; color:var(--ink-3); opacity:0; transition:opacity .12s}
 .cal-cell:hover .cell-add{opacity:1}
 .cell-add:hover{background:var(--surface-3); color:var(--ink)}
@@ -762,11 +786,7 @@ body.not-office main{max-width:none; padding:0}
     <div id="railtop"></div>
     <nav class="nav" id="nav"></nav>
     <div class="rail-foot">
-      <div class="avatar">MF</div>
-      <div style="min-width:0; flex:1">
-        <div style="font-size:12px; font-weight:600">Mark Forbes</div>
-        <div class="eyebrow">Senior / BCAR</div>
-      </div>
+      <div id="railuser" style="display:flex; align-items:center; gap:8px; flex:1; min-width:0"></div>
       <button class="iconbtn" id="themebtn" title="Switch theme" aria-label="Switch theme"></button>
     </div>
   </aside>
@@ -776,7 +796,8 @@ body.not-office main{max-width:none; padding:0}
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
       </button>
       <div class="crumb" id="crumb"></div>
-      <button class="btn sm" data-shell="home" style="margin-left:auto"><svg class="ic-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 3 8l9 5 9-5-9-5Z"/><path d="m3 14 9 5 9-5"/></svg>All portals</button>
+      <div class="roleseg" id="roleseg" style="margin-left:auto"></div>
+      <button class="btn sm" data-shell="home"><svg class="ic-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 3 8l9 5 9-5-9-5Z"/><path d="m3 14 9 5 9-5"/></svg>All portals</button>
       <button class="btn sm" data-act="scope">Staged scope</button>
       <button class="iconbtn" data-act="soon" aria-label="Notifications">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 9a6 6 0 1 1 12 0c0 4 1.5 5.5 1.5 5.5h-15S6 13 6 9Z"/><path d="M10 18a2 2 0 0 0 4 0"/></svg>
@@ -789,6 +810,7 @@ body.not-office main{max-width:none; padding:0}
 <div class="sheetwrap" id="sheetwrap"></div>
 <div class="modal-wrap" id="modalwrap" style="display:none"><div class="modal" id="modal" role="dialog" aria-modal="true"></div></div>
 <div class="toast" id="toast"></div>
+<div id="tasktip" aria-hidden="true"></div>
 
 <script>
 "use strict";
@@ -1082,9 +1104,15 @@ const FINANCE_ACCESS = {
   "Aoife Nolan":false, "Darren Gilsenan":false, "Bianca Fachin":false,
   "Lalit Rana":false, "Ciar\u00E1n Walsh":false
 };
-const canSeeFinance = () => state.financePreview ? false : true;
+const canSeeFinance = () => state.financePreview ? false : (state.role || "admin") === "admin";
 
 const byId = id => PROJECTS.find(p => p.id === id);
+PROJECTS.forEach(p => { p.stageUpdated = ["","","","",""]; });
+byId("0464P").stageUpdated = ["19.05.2025","14.10.2025","27.02.2026","12.05.2026","24.08.2026"];
+byId("0142P").stageUpdated = ["16.05.2026","20.08.2026","","",""];
+byId("0398P").stageUpdated = ["03.11.2025","22.01.2026","14.04.2026","02.06.2026","25.08.2026"];
+byId("0470P").stageUpdated = ["09.06.2026","21.08.2026","","",""];
+byId("0451P").stageUpdated = ["28.04.2024","15.09.2024","11.02.2025","30.06.2025","21.08.2026"];
 byId("0464P").checklist = [[true,true],[true,true],[true,true],[true,false],[true,true],[true,false],[false,false]];
 byId("0398P").checklist = [[true,true],[true,false],[true,false],[true,false],[true,true],[false,false],[false,false]];
 const PEOPLE = ["Mark Forbes","Edgar Henihan","Brian Murphy","Aoife Nolan","Darren Gilsenan","Bianca Fachin","Lalit Rana","Ciar\u00E1n Walsh"];
@@ -1121,16 +1149,16 @@ const state = {
   selFinding:0, planOpen:{0:true,1:true,2:true,3:true,4:true,5:true},
   shell:"home", mscreen:"day", mobAll:false, mobPid:"0464P", mobIno:"002",
   mobType:"BCAR", mobPin:null, mobCam:"rear", mobTog:{printed:true, issues:true}, mobLogged:6,
-  calWeeks:1, financePreview:false,
+  calWeeks:1, financePreview:false, role:"admin",
   mobStatus:"attn", filter:"all", issueFilter:"open", week:0, calSort:"name", calFilter:"all"
 };
 
 /* practice-level nav */
 const NAV = [
   {k:"dashboard", t:"Dashboard", i:I.gauge},
-  {k:"projects", t:"Projects", i:I.layers, n:() => PROJECTS.length},
+  {k:"projects", t:"Projects", i:I.layers, n:() => myProjects().length},
   {k:"schedule", t:"Task Calendar", i:I.clock, n:() => TASKS.filter(t => t.status !== "done").length},
-  {k:"finance", t:"Finance & Reporting", i:I.euro, later:true},
+  {k:"finance", t:"Reporting", i:I.chart},
   {k:"settings", t:"Settings", i:I.cog, later:true}
 ];
 /* project-level nav, grouped as the practice already reads it */
@@ -1234,9 +1262,12 @@ function viewDashboard(){
   const openIssues = ins.reduce((n,i) => n + issueCount(i), 0);
   const onSite = PROJECTS.filter(p => p.stage === 4);
   return '<div class="page-head"><div><h1>Practice overview</h1>'
-    + '<div class="sub">Wednesday 26 August 2026 &middot; Ballina &amp; Sligo &middot; ' + PROJECTS.length + ' live commissions</div></div>'
-    + '<div class="actions"><button class="btn" data-act="scope">'+svg(I.layers)+'Staged scope</button>'
-    + '<button class="btn primary" data-act="newproject">'+svg(I.plus)+'New project</button></div></div>'
+    + '<div class="sub">Wednesday 26 August 2026 &middot; Ballina &amp; Sligo &middot; '
+    + myProjects().length + (isAdmin() ? ' live commissions' : ' commissions assigned to you')
+    + ' &middot; signed in as '+role().t.toLowerCase()+'</div></div>'
+    + '<div class="actions"><button class="btn" data-sec="" data-nav="finance">'+svg(I.chart)+'Reporting</button>'
+    + '<button class="btn" data-act="scope">'+svg(I.layers)+'Staged scope</button>'
+    + (isAdmin() ? '<button class="btn primary" data-act="newproject">'+svg(I.plus)+'New project</button>' : '')+'</div></div>'
     + '<div class="stack">'
     + '<div class="kpis">'
     + kpiTile("Live commissions", PROJECTS.length, onSite.length + " on site", "")
@@ -1302,13 +1333,14 @@ function statusPill(s){
 /* ===================== projects list ===================== */
 function viewProjects(){
   return '<div class="page-head"><div><h1>Projects</h1>'
-    + '<div class="sub">The project record is the single source. Inspections, drawings, invoices and the payment schedule all belong to one of these.</div></div>'
+    + '<div class="sub">The project record is the single source. Inspections, drawings, invoices and the payment schedule all belong to one of these.'
+    + (isAdmin() ? '' : ' Showing the '+myProjects().length+' projects assigned to '+role().who+'.')+'</div></div>'
     + '<div class="actions"><button class="btn" data-act="soon">'+svg(I.dl)+'Export to Excel</button>'
     + '<button class="btn primary" data-act="newproject">'+svg(I.plus)+'New project</button></div></div>'
     + '<section class="card"><div class="card-b flush tbl-wrap"><table><thead><tr>'
     + '<th>Project no.</th><th>Project name</th><th>Client</th><th>Division</th><th>Project leader</th>'
     + '<th>Stage</th><th>Status</th><th>Inspections</th><th>Next visit</th><th>Open issues</th><th></th></tr></thead><tbody>'
-    + PROJECTS.map(p => {
+    + myProjects().map(p => {
         const oi = p.inspections.reduce((n,i) => n + issueCount(i), 0);
         return '<tr class="click" data-open="'+p.id+'">'
         + '<td class="mono" style="font-weight:500">'+p.ref+'</td>'
@@ -1421,13 +1453,16 @@ function panelOverview(p){
         + 'Schedule a visit and assign an engineer so the inspection record stays continuous.</p>'
         + '<button class="btn sm primary" data-act="newinsp" style="flex:none">'+svg(I.plus)+'Schedule visit</button></div>' : '')
     + '<section class="card"><div class="card-h">'+svg(I.chart,1.8)+'<h3>Stage tracking</h3>'
-      + '<div class="r"><span class="eyebrow">target, actual and stage owner</span></div></div>'
+      + '<div class="r"><span class="eyebrow">owner and date of last input</span></div></div>'
       + '<div class="card-b"><div class="stages">'
       + STAGES.map((s,idx) => '<div class="stage'+(idx===p.stage?" now":"")+'">'
         + '<div class="no">'+s.no+'</div><div class="nm">'+s.nm+'</div>'
         + '<div class="pc'+(p.stagePc[idx]===100?" done":"")+'">'+p.stagePc[idx]+'%</div>'
         + '<div class="meter" style="margin-top:6px"><i style="width:'+p.stagePc[idx]+'%"></i></div>'
-        + '<div class="who">'+p.stageOwner[idx]+'</div></div>').join("")
+        + '<div class="who">'+p.stageOwner[idx]+'</div>'
+        + '<div class="stage-upd">'+(p.stageUpdated[idx]
+            ? svg(I.clock,2)+'updated '+p.stageUpdated[idx]
+            : '<span style="opacity:.6">not started</span>')+'</div></div>').join("")
       + '</div></div></section>'
     + '<div class="grid" style="grid-template-columns:minmax(0,1.4fr) minmax(0,1fr)">'
     + '<section class="card"><div class="card-h">'+svg(I.clip,1.8)+'<h3>Inspections on this project</h3>'
@@ -2140,9 +2175,19 @@ function render(){
   m.innerHTML = state.view === "projects" ? viewProjects()
     : state.view === "project" ? viewProject()
     : state.view === "schedule" ? viewCalendar()
-    : state.view === "finance" || state.view === "settings" ? viewLater()
+    : state.view === "finance" ? viewReporting()
+    : state.view === "settings" ? viewLater()
     : viewDashboard();
-  renderNav(); crumb();
+  renderNav(); crumb(); renderRole();
+}
+function renderRole(){
+  const seg = document.getElementById("roleseg");
+  if(seg) seg.innerHTML = ROLES.map(r => '<button data-role="'+r.k+'" aria-pressed="'+(role().k===r.k)+'"'
+    + ' title="'+r.who+' \u2014 '+r.d+'">'+r.t+'</button>').join("");
+  const ru = document.getElementById("railuser");
+  if(ru) ru.innerHTML = '<div class="avatar">'+initials(role().who)+'</div>'
+    + '<div style="min-width:0; flex:1"><div style="font-size:12px; font-weight:600">'+role().who+'</div>'
+    + '<div class="eyebrow">'+role().t+'</div></div>';
 }
 function viewLater(){
   const n = NAV.find(x => x.k === state.view);
@@ -2171,6 +2216,13 @@ document.addEventListener("click", e => {
   const hit = s => e.target.closest(s);
   let el;
   if(hit("[data-nodrill]")) return;
+  if((el = hit("[data-role]"))){
+    state.role = el.dataset.role;
+    if(state.view === "finance" && !isAdmin()) { /* stay, the view explains itself */ }
+    state.financePreview = false;
+    render();
+    return toast("Viewing as " + role().t + " \u2014 " + role().who);
+  }
   if((el = hit("[data-shell]"))){
     state.shell = el.dataset.shell; state.mobAll = false;
     if(state.shell === "office" && !state.view) state.view = "dashboard";
@@ -2545,6 +2597,45 @@ document.addEventListener("keydown", e => {
   if(c && (e.key === "Enter" || e.key === " ")){ e.preventDefault(); modalTask(c.dataset.tid); }
 });
 
+/* hover a task for its project and summary */
+const tipEl = () => document.getElementById("tasktip");
+function showTip(el, e){
+  const t = taskById(el.dataset.tid); if(!t) return;
+  const pr = t.pid ? byId(t.pid) : null;
+  const tip = tipEl();
+  tip.innerHTML = '<div class="tt-ref">'+(pr ? pr.ref : "General \u2014 " + (t.cat || "no project"))+'</div>'
+    + (pr ? '<div class="tt-proj">'+pr.name+'</div>' : '')
+    + '<div class="tt-task">'+t.t+'</div>'
+    + '<div class="tt-meta"><span>'+t.estH+'h estimated</span>'
+    + (loggedH(t) ? '<span>'+loggedH(t)+'h logged</span>' : '')
+    + '<span>'+(t.place === "site" ? "on site" : "office")+'</span>'
+    + '<span>due '+t.due+'</span>'
+    + (t.who.length > 1 ? '<span>'+t.who.length+' people</span>' : '')
+    + (t.src ? '<span>inspection '+t.src.ino+'</span>' : '')
+    + '</div>';
+  tip.classList.add("on");
+  moveTip(e);
+}
+function moveTip(e){
+  const tip = tipEl(); if(!tip.classList.contains("on")) return;
+  const r = tip.getBoundingClientRect();
+  let x = e.clientX + 14, y = e.clientY + 16;
+  if(x + r.width > window.innerWidth - 10) x = e.clientX - r.width - 14;
+  if(y + r.height > window.innerHeight - 10) y = e.clientY - r.height - 14;
+  tip.style.left = Math.max(8, x) + "px";
+  tip.style.top = Math.max(8, y) + "px";
+}
+document.addEventListener("mouseover", e => {
+  const c = e.target.closest && e.target.closest(".ctask[data-tid]");
+  if(c) showTip(c, e);
+});
+document.addEventListener("mousemove", e => { if(tipEl().classList.contains("on")) moveTip(e); });
+document.addEventListener("mouseout", e => {
+  const c = e.target.closest && e.target.closest(".ctask[data-tid]");
+  if(c && !(e.relatedTarget && c.contains(e.relatedTarget))) tipEl().classList.remove("on");
+});
+document.addEventListener("dragstart", () => tipEl().classList.remove("on"));
+
 /* drag a task between people and days */
 const clearDrop = () => document.querySelectorAll(".cal-cell.drop-on").forEach(c => c.classList.remove("drop-on"));
 document.addEventListener("dragstart", e => {
@@ -2855,6 +2946,8 @@ function modalNewProject(){
 /* ---------- 2. Tasks: one practice-wide list, read per project and per employee ---------- */
 const TASK_PRI = {high:{t:"High",c:"attn"}, normal:{t:"Normal",c:"grey"}, low:{t:"Low",c:"grey"}};
 const CAPACITY = 37.5;
+const DAY_HOURS = 7.5;
+let HOUR_PX = 17;
 const GENERAL_CATS = ["Office admin","Travel","Training / CPD","Tender preparation","Business development","Annual leave"];
 const ROLE = {"Mark Forbes":"Senior / BCAR","Edgar Henihan":"Project leader","Brian Murphy":"Senior engineer",
   "Aoife Nolan":"Site engineer","Darren Gilsenan":"Site engineer","Bianca Fachin":"Project drawing",
@@ -2956,6 +3049,7 @@ function viewCalendar(){
   const weeks = state.calWeeks || 1;
   const days = weekDates(state.week || 0, weeks);
   const dense = weeks > 1;
+  HOUR_PX = weeks === 1 ? 17 : weeks === 2 ? 13 : 9;
   const filt = state.calFilter || "all";
   const inFilter = t => filt === "all" || (filt === "general" ? isGeneral(t) : t.pid === filt);
   const rows = PEOPLE.slice().map(n => {
@@ -2965,16 +3059,19 @@ function viewCalendar(){
   });
   if((state.calSort || "name") === "load") rows.sort((a,b) => b.h - a.h);
 
-  const chip = t => '<div class="ctask'+(t.status==="done"?" done":"")+'" data-tid="'+t.id+'"'
-    + ' draggable="true" role="button" tabindex="0"'
-    + ' style="border-left-color:'+pcolor(t.pid)+'; --pc:'+pcolor(t.pid)+'" title="'+t.t.replace(/"/g,"&quot;")
-    + (shares(t) ? " \u2014 shared with " + t.who.join(", ") : "") + '">'
-    + '<span class="ctop"><span class="cref">'+(t.pid || (t.cat||"General"))+'</span>'
-    + '<span class="ch'+(loggedH(t)>=t.estH&&t.estH?" full":"")+'">'+t.estH+'h</span></span>'
-    + '<span class="ct">'+t.t+'</span>'
-    + '<span class="cbot">'+(t.place==="site"?svg(I.pin,2)+'site':'office')
-    + (shares(t) ? '<span class="cshare">'+svg(I.users,2)+t.who.length+'</span>' : '')
-    + (loggedH(t) ? '<span class="clog">'+loggedH(t)+'h logged</span>' : '')+'</span></div>';
+  const chip = t => {
+    const hpx = Math.max(15, t.estH * HOUR_PX);
+    const tight = t.estH < 2, full = t.estH >= DAY_HOURS;
+    return '<div class="ctask'+(t.status==="done"?" done":"")+(tight?" tight":"")+(full?" fullday":"")+'"'
+    + ' data-tid="'+t.id+'" draggable="true" role="button" tabindex="0"'
+    + ' style="height:'+hpx+'px; border-left-color:'+pcolor(t.pid)+'; --pc:'+pcolor(t.pid)+'">'
+    + '<span class="cref">'+(t.pid || (t.cat||"General"))+'</span>'
+    + (tight ? '' : '<span class="ct">'+t.t+'</span>')
+    + '<span class="cfoot">'
+      + (full ? '<span class="cfull">full day</span>' : '')
+      + (shares(t) && !tight ? '<span class="cshare">'+svg(I.users,2)+t.who.length+'</span>' : '')
+      + '<span class="ch'+(loggedH(t)>=t.estH&&t.estH?" full":"")+'">'+t.estH+'h</span>'
+    + '</span></div>'; };
 
   return '<div class="page-head"><div><h1>Task calendar</h1>'
     + '<div class="sub">Every task in the practice for the week, by employee. Project tasks show their project number and appear on that project&#39;s own task schedule; general time is booked here and stays out of project fees.</div></div>'
@@ -3006,7 +3103,10 @@ function viewCalendar(){
       + '<b>'+d.num+(dense?'':' '+d.mon)+'</b>'+(d.key===TODAY?'<span class="tdot">today</span>':'')+'</div>').join("")
     + rows.map(r => {
         const over = r.h > CAPACITY;
-        return '<div class="cal-emp"><div class="row" style="gap:8px"><span class="avatar">'+initials(r.n)+'</span>'
+        const dayH = d => r.mine.filter(t => t.date === d.key).reduce((s,t) => s + t.estH, 0);
+        const peak = Math.max(DAY_HOURS, ...days.map(dayH));
+        const rowPx = Math.round(peak * HOUR_PX) + 12;
+        return '<div class="cal-emp" style="height:'+rowPx+'px"><div class="row" style="gap:8px"><span class="avatar">'+initials(r.n)+'</span>'
           + '<span style="min-width:0"><span style="display:block; font-size:12.5px; font-weight:600">'+r.n+'</span>'
           + '<span class="eyebrow">'+(ROLE[r.n]||"")+'</span></span></div>'
           + '<div class="load"><div class="meter"><i class="'+(over?"attn":"")+'" style="width:'+Math.min(100, r.h/CAPACITY*100)+'%"></i></div>'
@@ -3014,13 +3114,17 @@ function viewCalendar(){
         + days.map(d => {
             const cell = r.mine.filter(t => t.date === d.key);
             const ch = cell.reduce((s,t) => s + t.estH, 0);
-            return '<div class="cal-cell'+(ch>8?" hot":"")+(d.key===TODAY?" today":"")+(d.wk&&d.lbl==="Mon"?" wkstart":"")+'" data-cell="'+r.n+"|"+d.key+'">'
-              + (ch && !dense ? '<span class="cellh'+(ch>8?" over":"")+'">'+ch+'h</span>' : '')
+            const hot = ch > DAY_HOURS;
+            return '<div class="cal-cell'+(hot?" hot":"")+(d.key===TODAY?" today":"")+(d.wk&&d.lbl==="Mon"?" wkstart":"")+'"'
+              + ' style="height:'+rowPx+'px" data-cell="'+r.n+"|"+d.key+'">'
+              + (hot ? '<span class="cellh over">'+ch+'h</span>' : '')
               + cell.map(chip).join("")
               + '<button class="cell-add" data-addtask="'+r.n+"|"+d.key+'" aria-label="Add task for '+r.n+'">'+svg(I.plus,2)+'</button>'
               + '</div>'; }).join(""); }).join("")
     + '</div></div>'
-    + '<div class="plan-legend"><span>Drag a task onto another person or day to move it. Hold <b>Alt</b> while dropping to add that person instead of moving. Estimated hours are per person; cells over 8h are flagged.</span>'
+    + '<div class="plan-legend"><span>Block height is the time allocated \u2014 a full '+DAY_HOURS+'h task fills the day. '
+    + 'Any day over '+DAY_HOURS+'h is shaded red with its total. Hover a task for the project and a summary. '
+    + 'Drag onto another person or day to move it; hold <b>Alt</b> while dropping to add that person instead.</span>'
     + '<span style="margin-left:auto"><button class="flink" data-act="soon">Export week to Excel</button></span></div>'
     + '</section>'
     + '<div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr))">'
@@ -3575,6 +3679,127 @@ function viewPortalShell(){
     + '<button class="wback" data-shell="home">'+svg(I.back,2)+'All portals</button>'
     + '<div><div class="eyebrow">External portal</div><h2>Contractor portal</h2></div></div>'
     + '<div style="padding:0 22px 50px">' + portalSheet(p, i) + '</div>';
+}
+
+
+/* ---------- role-based views ---------- */
+const ROLES = [
+  {k:"admin", t:"Administrator", who:"Andrea de Brito", fin:true,
+   d:"Everything, including all financial reporting."},
+  {k:"leader", t:"Project Leader", who:"Mark Forbes", fin:false,
+   d:"Own projects and the practice schedule. Fee figures hidden."},
+  {k:"engineer", t:"Engineer", who:"Darren Gilsenan", fin:false,
+   d:"Assigned projects and inspections only. No commercial data."}
+];
+const role = () => ROLES.find(r => r.k === (state.role || "admin")) || ROLES[0];
+const isAdmin = () => role().k === "admin";
+const leaderScope = () => role().k === "leader"
+  ? PROJECTS.filter(p => p.leader === role().who || p.inspector === role().who) : PROJECTS;
+const myProjects = () => role().k === "engineer"
+  ? PROJECTS.filter(p => p.inspector === role().who || tasksFor(p.id).some(t => t.who.indexOf(role().who) >= 0))
+  : leaderScope();
+
+/* ---------- reporting metrics ---------- */
+const byLeader = () => { const g = {}; PROJECTS.forEach(p => { g[p.leader] = (g[p.leader]||0)+1; }); return g; };
+const byKey = k => { const g = {}; PROJECTS.forEach(p => { const v = k === "status" ? PROJECT_STATUS[p.status].t : p[k];
+  g[v] = (g[v]||0)+1; }); return g; };
+const inspState = () => {
+  const all = allInsp();
+  return {
+    upcoming: all.filter(i => i.status === "scheduled" && dnum(i.date) >= TODAYN).length,
+    overdue: all.filter(i => i.status === "scheduled" && dnum(i.date) < TODAYN).length,
+    completed: all.filter(i => i.status === "issued").length,
+    draft: all.filter(i => i.status === "draft").length
+  };
+};
+function barList(obj, colour){
+  const keys = Object.keys(obj), max = Math.max(1, ...Object.values(obj));
+  return '<div class="card-b" style="display:flex; flex-direction:column; gap:10px">'
+    + (keys.length ? keys.map(k => '<div><div class="row" style="justify-content:space-between; margin-bottom:4px">'
+      + '<span style="font-size:12px">'+k+'</span>'
+      + '<span class="num" style="font-size:12px; color:var(--ink-3)">'+obj[k]+'</span></div>'
+      + '<div class="meter"><i class="'+(colour||"")+'" style="width:'+(obj[k]/max*100)+'%"></i></div></div>').join("")
+      : '<div class="empty">Nothing to show.</div>')
+    + '</div>';
+}
+function viewReporting(){
+  const ins = inspState();
+  const fin = isAdmin();
+  const FIN = [
+    ["Invoicing", [["Projects to be invoiced","3","&euro;86k"],["Invoices issued","12","&euro;214k"],
+      ["Payments received","9","&euro;171k"],["Credit notes issued","1","&euro;2.4k"],
+      ["Aged debtors","4","&euro;43k"],["Invoices / aged debtors analysis","&mdash;",""],
+      ["Project payment schedule (projected fee income)","&mdash;","&euro;1.37m"],["Fee income analysis","&mdash;",""]]],
+    ["Expenses", [["Expenses","28","&euro;6.1k"],["Expenses to be reimbursed","7","&euro;1.4k"],
+      ["Expenses to be claimed","5","&euro;0.9k"]]],
+    ["Purchase invoices", [["Purchase invoices received","16","&euro;24k"],
+      ["Suppliers list","11",""],["Payments made to suppliers","13","&euro;19k"]]]
+  ];
+  return '<div class="page-head"><div><h1>Reporting</h1>'
+    + '<div class="sub">Practice metrics for '+role().t.toLowerCase()+' access. '
+    + (fin ? 'Financial reporting is included because you are an administrator.'
+           : 'Financial reporting is hidden at this access level.')+'</div></div>'
+    + '<div class="actions"><button class="btn sm" data-act="soon">'+svg(I.dl)+'Export</button></div></div>'
+    + '<div class="stack">'
+    + '<div class="kpis" style="grid-template-columns:repeat(4,minmax(0,1fr))">'
+      + kpiTile("Projects", PROJECTS.length, Object.keys(byLeader()).length + " project leaders", "")
+      + kpiTile("Inspections", allInsp().length, ins.completed + " issued, " + ins.draft + " draft", "")
+      + kpiTile("Upcoming inspections", ins.upcoming, "scheduled ahead", "")
+      + kpiTile("Overdue inspections", ins.overdue, ins.overdue ? "past their date" : "none overdue", ins.overdue ? "attn" : "resolved")
+    + '</div>'
+    + '<div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(290px,1fr))">'
+      + '<section class="card"><div class="card-h">'+svg(I.users,1.8)+'<h3>Projects per project leader</h3></div>'
+        + barList(byLeader()) + '</section>'
+      + '<section class="card"><div class="card-h">'+svg(I.layers,1.8)+'<h3>Projects by status</h3></div>'
+        + barList(byKey("status"), "wip") + '</section>'
+      + '<section class="card"><div class="card-h">'+svg(I.layers,1.8)+'<h3>Projects by sector</h3></div>'
+        + barList(byKey("sector"), "resolved") + '</section>'
+      + '<section class="card"><div class="card-h">'+svg(I.layers,1.8)+'<h3>Projects by category</h3></div>'
+        + barList(byKey("type"), "noissue") + '</section>'
+    + '</div>'
+    + '<section class="card"><div class="card-h">'+svg(I.users,1.8)+'<h3>Teams assigned to each project</h3>'
+      + '<div class="r"><span class="eyebrow">from the project team and task assignments</span></div></div>'
+      + '<div class="card-b flush tbl-wrap"><table><thead><tr><th>Project</th><th>Project leader</th>'
+      + '<th>Assigned certifier</th><th>Team</th><th class="r">Inspections</th><th class="r">Open tasks</th></tr></thead><tbody>'
+      + PROJECTS.map(p => {
+          const team = Array.from(new Set(tasksFor(p.id).flatMap(t => t.who).concat(
+            [p.leader, p.inspector, p.drawing].filter(Boolean))));
+          return '<tr class="click" data-open="'+p.id+'"><td><b>'+p.name+'</b>'
+          + '<div class="mono" style="font-size:10.5px; color:var(--ink-3)">'+p.ref+'</div></td>'
+          + '<td>'+p.leader+'</td><td>'+p.inspector+'</td>'
+          + '<td><span class="row" style="gap:4px">'
+          + team.slice(0,6).map(w => '<span class="avatar sm" title="'+w+'">'+initials(w)+'</span>').join("")
+          + (team.length > 6 ? '<span class="eyebrow">+'+(team.length-6)+'</span>' : '') + '</span></td>'
+          + '<td class="r num">'+p.inspections.length+'</td>'
+          + '<td class="r num">'+tasksFor(p.id).filter(t => t.status !== "done").length+'</td></tr>'; }).join("")
+      + '</tbody></table></div></section>'
+    + '<section class="card"><div class="card-h">'+svg(I.clip,1.8)+'<h3>Inspection volumes</h3></div>'
+      + '<div class="card-b flush tbl-wrap"><table><thead><tr><th>Project</th><th class="r">BCAR</th>'
+      + '<th class="r">Non-BCAR</th><th class="r">Upcoming</th><th class="r">Overdue</th><th class="r">Issued</th>'
+      + '<th class="r">Open issues</th></tr></thead><tbody>'
+      + PROJECTS.map(p => '<tr class="click" data-open="'+p.id+'" data-sec="inspections">'
+        + '<td><b>'+p.ref+'</b> '+p.name+'</td>'
+        + '<td class="r num">'+p.inspections.filter(i => i.type === "BCAR").length+'</td>'
+        + '<td class="r num">'+p.inspections.filter(i => i.type !== "BCAR").length+'</td>'
+        + '<td class="r num">'+p.inspections.filter(i => i.status === "scheduled" && dnum(i.date) >= TODAYN).length+'</td>'
+        + '<td class="r num">'+(function(){ const n = p.inspections.filter(i => i.status === "scheduled" && dnum(i.date) < TODAYN).length;
+            return n ? '<b style="color:var(--attn)">'+n+'</b>' : '0'; })()+'</td>'
+        + '<td class="r num">'+p.inspections.filter(i => i.status === "issued").length+'</td>'
+        + '<td class="r num">'+p.inspections.reduce((n,i) => n + issueCount(i), 0)+'</td></tr>').join("")
+      + '</tbody></table></div></section>'
+    + (fin ? FIN.map(g => '<section class="card"><div class="card-h">'+svg(I.euro,1.8)+'<h3>'+g[0]+'</h3>'
+        + '<div class="r"><span class="chip grey">'+svg(I.lock,2)+'administrator only</span></div></div>'
+        + '<div class="card-b flush tbl-wrap"><table><thead><tr><th>Report</th><th class="r">Count</th>'
+        + '<th class="r">Value</th><th></th></tr></thead><tbody>'
+        + g[1].map(r => '<tr class="click" data-act="soon"><td style="font-weight:500">'+r[0]+'</td>'
+          + '<td class="r num">'+r[1]+'</td><td class="r num">'+(r[2]||"&mdash;")+'</td>'
+          + '<td class="r" style="color:var(--ink-3)">'+svg(I.arrow,1.6)+'</td></tr>').join("")
+        + '</tbody></table></div></section>').join("")
+      : '<section class="card"><div class="card-b"><div class="empty" style="padding:40px 16px">'
+        + svg(I.lock,1.6) + '<div style="margin-top:9px; font-weight:600; color:var(--ink-2)">Financial reporting is restricted</div>'
+        + '<div style="margin-top:5px; max-width:54ch; margin-left:auto; margin-right:auto">Invoicing, expenses and purchase invoices are available to administrators only. Switch the role in the top bar to see what an administrator sees.</div>'
+        + '</div></div></section>')
+    + '</div>';
 }
 
 themeIcon(); render();
