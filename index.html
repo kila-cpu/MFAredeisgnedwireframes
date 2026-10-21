@@ -1807,16 +1807,21 @@ function panelContacts(p){
 function panelInvoices(p){
   return '<div class="stack">'
     + '<div class="page-head" style="margin:0"><div><h1 style="font-size:18px">Invoices</h1>'
-      + '<div class="sub">Raised against this project and its payment schedule.</div></div>'
-      + '<div class="actions"><button class="btn primary" data-act="soon">'+svg(I.plus)+'Raise invoice</button></div></div>'
+      + '<div class="sub">Invoices recorded against this project and its payment schedule. '
+      + 'Invoices are issued from the practice accounting package \u2014 this is the project-side record of what has been raised, sent and paid.</div></div>'
+      + '<div class="actions"><button class="btn" data-act="soon">'+svg(I.link)+'Sync from accounts</button>'
+      + '<button class="btn primary" data-act="soon">'+svg(I.plus)+'Record invoice</button></div></div>'
     + '<section class="card"><div class="card-b flush tbl-wrap">'
     + (p.invoices.length ? '<table><thead><tr><th>Invoice no.</th><th>Description</th><th>Issued</th><th class="r">Amount</th><th>Status</th></tr></thead><tbody>'
       + p.invoices.map(v => '<tr><td class="mono">'+v.no+'</td><td>'+v.d+'</td>'
         + '<td class="num" style="color:var(--ink-3); font-size:12px">'+v.issued+'</td>'
         + '<td class="r num" style="font-weight:600">'+eur(v.amt)+'</td>'
         + '<td><span class="chip '+(v.status==="Paid"?"resolved":"wip")+'">'+v.status+'</span></td></tr>').join("")
-      + '</tbody></table>' : '<div class="empty">No invoices raised on this project.</div>')
-    + '</div></section></div>';
+      + '</tbody></table>' : '<div class="empty">No invoices recorded on this project.</div>')
+    + '</div>'
+    + '<div class="plan-legend"><span>'+svg(I.alert,1.8)
+    + 'The app does not issue invoices. Numbers, values and payment status are held here so fee progress can be tracked against the project; the invoice itself is produced and sent from the accounting package.</span></div>'
+    + '</section></div>';
 }
 function panelPayments(p){
   return '<div class="stack">'
@@ -3797,7 +3802,11 @@ function viewReporting(){
         + '<td class="r num">'+p.inspections.filter(i => i.status === "issued").length+'</td>'
         + '<td class="r num">'+p.inspections.reduce((n,i) => n + issueCount(i), 0)+'</td></tr>').join("")
       + '</tbody></table></div></section>'
-    + (fin ? FIN.map(g => '<section class="card"><div class="card-h">'+svg(I.euro,1.8)+'<h3>'+g[0]+'</h3>'
+    + (fin ? '<div class="callout warn">'+svg(I.alert)
+      + '<p><b>Reporting, not bookkeeping.</b> The app does not issue invoices, process payments or replace the practice accounting package. '
+      + 'It holds the project-side record so fee income, expenses and supplier costs can be reported by project, client and leader. '
+      + 'Figures below are demonstration data.</p></div>'
+      + FIN.map(g => '<section class="card"><div class="card-h">'+svg(I.euro,1.8)+'<h3>'+g[0]+'</h3>'
         + '<div class="r"><span class="chip grey">'+svg(I.lock,2)+'administrator only</span></div></div>'
         + '<div class="card-b flush tbl-wrap"><table><thead><tr><th>Report</th><th class="r">Count</th>'
         + '<th class="r">Value</th><th></th></tr></thead><tbody>'
